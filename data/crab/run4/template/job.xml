@@ -1,0 +1,16 @@
+<job id="1487">
+	<parameter name="RegionOfInterest" ra="83.6331" dec="22.0145" skypositiontype="3" radius="5.0" AlertContour="None" frame="fk5" unit="deg" />
+	<parameter name="TimeIntervals" tmin="3600" tmax="4800" timeunit="s" timesys="tt" />
+	<parameter name="ScienceToolReference" timestart="51544.5" timeunit="s" timesys="tt" timeref="LOCAL" skyframe="fk5" skyframeunit="deg" />
+	<parameter name="Energy" emin="0.03" emax="100.0" energyBinID="" />
+	<parameter name="DirectoryList" job="$SAGSCI/sagsci/examples/data/crab_wobble/run4/" results="$SAGSCI/sagsci/examples/results/crab_wobble/run4/" jobprefix="test"/>
+	<parameter name="OnOff" method="cross" radius="0.2" save_off_regions="off_regions.reg" pixel_size="0.05" event_type="events_filename"/>
+	<parameter name="Calibration" path="$SAGSCI/sagsci/caldb/data/cta" />
+	<parameter name="Stack" value="1" depth="1" />
+	<parameter name="ComputeFlux" value="1" />
+	<parameter name="CountsMap" value="1" binsize="0.02" zoomroi="3" smooth="1" reg="1" />
+	<parameter name="WorkInMemory" value="1" />
+	<parameter name="Verbose" value="0" />
+	<parameter name="DeleteJob" value="0" />
+	<parameter name="Logging" level="debug" />
+</job>

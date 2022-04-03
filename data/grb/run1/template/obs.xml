@@ -1,0 +1,8 @@
+<observation name="GRB_RUN0406_ID000126" id="1" instrument="CTA-SOUTH">
+  <parameter name="Pointing" ra="31.582" dec="-53.211" frame="fk5" unit="deg"/>
+  <parameter name="GoodTimeIntervals" tstartreal="0" tendreal="1200" tstartplanned="0" tendplanned="1200" timeunit="s" timesys="tt"/>
+  <parameter name="RegionOfInterest" ra="31.582" dec="-53.211" rad="5.0" frame="fk5" unit="deg"/>
+  <parameter name="Deadtime" deadc="1"/>
+  <parameter name="Calibration" database="prod3b-v2" response="South_z20_0.5h"/>
+  <parameter name="Energy" emin="0.1" emax="100.0"/>
+</observation>
