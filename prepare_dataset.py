@@ -35,6 +35,8 @@ log.setLevel(logging.DEBUG)
 log.info(f'Remove all subdirs in run directory')
 datapath = join(expandvars(config['dirlist']['data']), str(runid))
 bins = [join(datapath, f) for f in listdir(datapath) if isdir(join(datapath, f))]
+for b in bins:
+    system(f'rm -r {b}')
 
 # list all fits inside $DATA directory
 log.info(f'Preparing dataset: {datapath}')
@@ -74,7 +76,7 @@ for b in bins:
     prm.set('job', datapath)  
     respath = join(b, 'results') 
     prm.set('results', respath)   
-    prm.set('prefix', f"analysis")   
+    prm.set('jobprefix', f"{basename(b)}")   
     prm = root.find('parameter[@name="RegionOfInterest"]')
     prm.set('ra', str(pointing['ra']))
     prm.set('dec', str(pointing['dec']))
