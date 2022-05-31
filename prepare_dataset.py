@@ -27,12 +27,20 @@ configuration = open(args.configfile)
 config = yaml.load(configuration, Loader=yaml.FullLoader)
 runid = config["run"]["runid"]
 
-# set logging leve
+# set logging level and formatter
 log = logging.getLogger(__name__)
 log.setLevel(logging.DEBUG)
+sh = logging.StreamHandler()
+formatter = logging.Formatter('[%(asctime)s]:%(name)s:%(levelname)s:%(message)s')
+sh.setFormatter(formatter)
+log.addHandler(sh)
+
+# remove all subfolders in $DATA directory
+log.info(f'Remove all subdirs in run directory')
+datapath = join(expandvars(config['dirlist']['data']), str(runid))
+bins = [join(datapath, f) for f in listdir(datapath) if isdir(join(datapath, f))]
 
 # list all fits inside $DATA directory
-datapath = join(expandvars(config['dirlist']['data']), str(runid))
 log.info(f'Preparing dataset: {datapath}')
 bins = [join(datapath, f) for f in listdir(datapath) if isfile(join(datapath, f)) and '.fits' in f]
 
@@ -60,39 +68,51 @@ for b in bins:
     tstart, tstop = get_obs_GTI(fitsfile=fitsfile)
     pointing = get_obs_pointing(filename=fitsfile)
     jobfile = join(b, 'job.xml')
-    job = open(jobfile)
-    jobconf = ET.parse(job)
-    prm = jobconf.find('parameter[@name="TimeIntervals"]')
+    with open(jobfile) as job:
+        jobconf = ET.parse(job)
+    root = jobconf.getroot()
+    prm = root.find('parameter[@name="TimeIntervals"]')
     prm.set('tmin', str(tstart))
     prm.set('tmax', str(tstop))
-    prm = jobconf.find('parameter[@name="DirectoryList"]')
+    prm = root.find('parameter[@name="DirectoryList"]')
     prm.set('job', datapath)  
     respath = join(b, 'results') 
     prm.set('results', respath)   
     prm.set('prefix', f"analysis")   
-    prm = jobconf.find('parameter[@name="RegionOfInterest"]')
+    prm = root.find('parameter[@name="RegionOfInterest"]')
     prm.set('ra', str(pointing['ra']))
     prm.set('dec', str(pointing['dec']))
-    jobconf.write(join(datapath, 'job.xml'), encoding="UTF-8", xml_declaration=True)
-    job.close()
+    prm = root.find('parameter[@name="Energy"]')
+    prm.set('emin', str(config['run']['emin']))
+    prm.set('emax', str(config['run']['emax']))
+    jobconf.write(jobfile)
 
 # modify obs.xml per each bin in $DATA
 bins = [join(datapath, d) for d in listdir(datapath) if isdir(join(datapath, d))]
 log.info('Prepare obs.xml files')
 for b in bins:
     obsfile = join(b, 'obs.xml')
-    obs = open(obsfile)
-    obsconf = ET.parse(obs)
-    prm = obsconf.find('parameter[@name="GoodTimeIntervals"]')
+    with open(obsfile) as obs:
+        obsconf = ET.parse(obs)
+    root = obsconf.getroot()
+    root.set('name', config['source'])
+    root.set('instrument', 'LST-1')
+    root.set('id', str(runid))
+    prm = root.find('parameter[@name="GoodTimeIntervals"]')
     prm.set('tstartreal', str(tstart))
     prm.set('tendreal', str(tstop))
     prm.set('tstartplanned', str(tstart))
     prm.set('tendplanned', str(tstart))
-    prm = obsconf.find('parameter[@name="RegionOfInterest"]')
+    prm = root.find('parameter[@name="RegionOfInterest"]')
     prm.set('ra', str(pointing['ra']))
     prm.set('dec', str(pointing['dec']))
-    prm = obsconf.find('parameter[@name="Pointing"]')
+    prm = root.find('parameter[@name="Pointing"]')
     prm.set('ra', str(pointing['ra']))
     prm.set('dec', str(pointing['dec']))
-    obsconf.write(join(datapath, 'obs.xml'), encoding="UTF-8", xml_declaration=True)
-    job.close()
+    prm = root.find('parameter[@name="Energy"]')
+    prm.set('emin', str(config['run']['emin']))
+    prm.set('emax', str(config['run']['emax']))
+    prm = root.find('parameter[@name="Calibration"]')
+    prm.set('database', config['run']['prod'])
+    prm.set('response', config['run']['irf'])
+    obsconf.write(obsfile)
