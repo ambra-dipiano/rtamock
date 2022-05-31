@@ -26,7 +26,7 @@ def get_obs_GTI(fitsfile):
 
 def split_observation(fitsfile, nbins):
     GTI = get_obs_GTI(fitsfile=fitsfile)
-    edges = np.linspace(GTI[0], GTI[1], num=nbins)
+    edges = np.linspace(GTI[0], GTI[1], num=nbins+1)
     bins = []
     for i in range(len(edges)-1):
         selection = fitsfile.replace(".fits", f"_{edges[i]}_{edges[i+1]}.fits")
