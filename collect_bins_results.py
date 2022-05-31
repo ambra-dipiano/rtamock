@@ -54,8 +54,10 @@ for idx, d in enumerate(subdirs):
     source = xml.get_source_name()
     excess = xml.get_job_results(source=source, parameter='Photometric', attribute='excess')
     excess_err = xml.get_job_results(source=source, parameter='Photometric', attribute='excess_err')
-    bkg = xml.get_job_results(source=source, parameter='Photometric', attribute='off_counts')
-    bkg_err = np.sqrt(bkg)
+    off_counts = xml.get_job_results(source=source, parameter='Photometric', attribute='off_counts')
+    off_err = np.sqrt(off_counts)
+    on_counts = xml.get_job_results(source=source, parameter='Photometric', attribute='on_counts')
+    on_err = np.sqrt(on_counts)
     sigma = xml.get_job_results(source=source, parameter='Significance', attribute='value')
     sigma_err = xml.get_job_results(source=source, parameter='Significance', attribute='error')
     flux = xml.get_job_results(source=source, parameter='IntegratedFlux', attribute='value')
@@ -65,9 +67,9 @@ for idx, d in enumerate(subdirs):
     f = open(datafile, 'a+')
     w = csv.writer(f, delimiter=' ')
     if idx == 0:
-        hdr = ['time', 'time_err', 'excess', 'excess_err', 'sigma', 'sigma_err', 'flux', 'flux_err', 'bkg', 'bkg_err', 'emin', 'emax']
+        hdr = ['time', 'time_err', 'excess', 'excess_err', 'sigma', 'sigma_err', 'flux', 'flux_err', 'on_counts', 'off_counts', 'emin', 'emax']
         w.writerow(hdr)
-    row = [tmean, terror, excess, excess_err, sigma, sigma_err, flux, flux_err, bkg, bkg_err, emin, emax]
+    row = [tmean, terror, excess, excess_err, sigma, sigma_err, flux, flux_err, on_counts, on_err, off_counts, off_err, emin, emax]
     w.writerow(row)
     f.close()
 
