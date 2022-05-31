@@ -12,7 +12,7 @@ import numpy as np
 import argparse
 import logging
 import xml.etree.ElementTree as ET
-from os import listdir
+from os import listdir, remove
 from os.path import join, isdir, basename, isfile
 from sagsci.tools.utils import get_absolute_path
 from sagsci.tools.myxml import MyXml
@@ -32,6 +32,12 @@ log.info(f'Collect timebins in run {args.run}')
 datapath = join(get_absolute_path(args.dataset))
 subdirs = [join(datapath, d) for d in listdir(datapath) if isdir(join(datapath, d))]
 datafile = join(datapath, f'run{args.run}_lightcurve_{len(subdirs)}bins.txt')
+
+# create and clear file
+f = open(datafile, 'w+')
+w = csv.writer(f, delimiter=' ')
+hdr = ['time', 'time_err', 'excess', 'excess_err', 'sigma', 'sigma_err', 'flux', 'flux_err', 'on_counts', 'off_counts', 'emin', 'emax']
+w.writerow(hdr)
 
 # loop all time bins
 for idx, d in enumerate(subdirs):
@@ -63,14 +69,10 @@ for idx, d in enumerate(subdirs):
     flux = xml.get_job_results(source=source, parameter='IntegratedFlux', attribute='value')
     flux_err = xml.get_job_results(source=source, parameter='IntegratedFlux', attribute='error')
     xml.close_xml()
-    # write row to file
-    f = open(datafile, 'a+')
-    w = csv.writer(f, delimiter=' ')
-    if idx == 0:
-        hdr = ['time', 'time_err', 'excess', 'excess_err', 'sigma', 'sigma_err', 'flux', 'flux_err', 'on_counts', 'off_counts', 'emin', 'emax']
-        w.writerow(hdr)
+
+    # write to file
     row = [tmean, terror, excess, excess_err, sigma, sigma_err, flux, flux_err, on_counts, on_err, off_counts, off_err, emin, emax]
     w.writerow(row)
-    f.close()
 
+f.close()
 log.info(f'Results collected in: {datafile}')
