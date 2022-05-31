@@ -31,9 +31,11 @@ runid = config["run"]["runid"]
 log = logging.getLogger(__name__)
 log.setLevel(logging.DEBUG)
 
+# set datapath
+datapath = join(expandvars(config['dirlist']['data']), str(runid))
+
 # remove all subfolders in $DATA directory
 log.info(f'Remove all subdirs in run directory')
-datapath = join(expandvars(config['dirlist']['data']), str(runid))
 bins = [join(datapath, f) for f in listdir(datapath) if isdir(join(datapath, f))]
 for b in bins:
     system(f'rm -r {b}')
@@ -45,7 +47,7 @@ bins = [join(datapath, f) for f in listdir(datapath) if isfile(join(datapath, f)
 # if only one fits in $DATA directory split observation otherwise skip
 if len(bins) == 1:
     nbins = int(config['run']['nbins'])
-    log.info(f'Splitting observation in {nbins}')
+    log.info(f'Splitting observation in {nbins} time bins')
     bins = split_observation(fitsfile=bins[0], nbins=nbins)
 
 # create single folders per each fits in $DATA and copy xml files within
