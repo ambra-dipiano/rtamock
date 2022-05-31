@@ -27,13 +27,9 @@ configuration = open(args.configfile)
 config = yaml.load(configuration, Loader=yaml.FullLoader)
 runid = config["run"]["runid"]
 
-# set logging level and formatter
+# set logging level 
 log = logging.getLogger(__name__)
 log.setLevel(logging.DEBUG)
-sh = logging.StreamHandler()
-formatter = logging.Formatter('[%(asctime)s]:%(name)s:%(levelname)s:%(message)s')
-sh.setFormatter(formatter)
-log.addHandler(sh)
 
 # remove all subfolders in $DATA directory
 log.info(f'Remove all subdirs in run directory')
@@ -115,4 +111,16 @@ for b in bins:
     prm = root.find('parameter[@name="Calibration"]')
     prm.set('database', config['run']['prod'])
     prm.set('response', config['run']['irf'])
+    obsconf.write(obsfile)
+
+# modify target.xml per each bin in $DATA
+bins = [join(datapath, d) for d in listdir(datapath) if isdir(join(datapath, d))]
+log.info('Prepare target.xml files')
+for b in bins:
+    obsfile = join(b, 'target.xml')
+    with open(obsfile) as obs:
+        obsconf = ET.parse(obs)
+    root = obsconf.getroot()
+    prm = root.find('source')
+    root.set('name', config['source'])
     obsconf.write(obsfile)
