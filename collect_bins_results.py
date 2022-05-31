@@ -31,6 +31,7 @@ log.setLevel(logging.DEBUG)
 log.info(f'Collect timebins in run {args.run}')
 datapath = join(get_absolute_path(args.dataset))
 subdirs = [join(datapath, d) for d in listdir(datapath) if isdir(join(datapath, d))]
+datafile = join(datapath, f'run{args.run}_lightcurve_{len(subdirs)}bins.txt')
 
 # loop all time bins
 for idx, d in enumerate(subdirs):
@@ -61,7 +62,6 @@ for idx, d in enumerate(subdirs):
     flux_err = xml.get_job_results(source=source, parameter='IntegratedFlux', attribute='error')
     xml.close_xml()
     # write row to file
-    datafile = join(datapath, f'run{args.run}_lightcurve_{len(subdirs)}bins.txt')
     f = open(datafile, 'a+')
     w = csv.writer(f, delimiter=' ')
     if idx == 0:
