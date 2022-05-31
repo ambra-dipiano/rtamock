@@ -1,5 +1,5 @@
 # *******************************************************************************
-# Copyright (C) 2021 INAF
+# Copyright (C) 2022 INAF
 #
 # This software is distributed under the terms of the BSD-3-Clause license
 #
