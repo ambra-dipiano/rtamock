@@ -10,12 +10,11 @@
 import yaml
 import argparse
 import logging
-import numpy as np
 import xml.etree.ElementTree as ET
 from os import listdir, system
 from os.path import join, isdir, expandvars, isfile, basename
 from sagsci.tools.utils import get_obs_pointing
-from utils import get_obs_GTI, split_observation
+from utils import get_obs_GTI, split_observation, bool2int
 
 # get line command options
 parser = argparse.ArgumentParser()
@@ -85,6 +84,9 @@ for b in bins:
     prm = root.find('parameter[@name="Energy"]')
     prm.set('emin', str(config['run']['emin']))
     prm.set('emax', str(config['run']['emax']))
+    prm = root.find('parameter[@name="Stack"]')
+    prm.set('value', str(bool2int(config['run']['stack'])))
+    prm.set('depth', str(config['run']['maxdepth']))
     jobconf.write(jobfile)
 
 # modify obs.xml per each bin in $DATA
