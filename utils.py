@@ -30,7 +30,7 @@ def get_obs_GTI(fitsfile):
         GTI = h['GTI'].data[0]
     return GTI
 
-def split_observation(fitsfile, nbins):
+def split_observation(fitsfile, nbins, type='lightcurve'):
     GTI = get_obs_GTI(fitsfile=fitsfile)
     edges = np.linspace(GTI[0], GTI[1], num=nbins+1)
     bins = []
@@ -42,7 +42,13 @@ def split_observation(fitsfile, nbins):
         f = Fits()
         pointing = {'ra': f.get_dl3_hdr(selection)['RA_PNT'], 'dec': f.get_dl3_hdr(selection)['DEC_PNT']}
         dl3 = f.get_dl3_data(selection)
-        dl3_selected = f.selection_cuts(dl3, pointing, trange=[edges[i], edges[i+1]])
-        f.set_dl3_data(selection, dl3_selected, GTI=[edges[i], edges[i+1]])
+        if type.lower() == 'lightcurve':
+            dl3_selected = f.selection_cuts(dl3, pointing, trange=[edges[i], edges[i+1]])
+            f.set_dl3_data(selection, dl3_selected, GTI=[edges[i], edges[i+1]])
+        elif type.lower() == 'cumulative':
+            dl3_selected = f.selection_cuts(dl3, pointing, trange=[edges[0], edges[i+1]])
+            f.set_dl3_data(selection, dl3_selected, GTI=[edges[0], edges[i+1]])
+        else:
+            raise ValueError(f'Type "{type.lower()}" not allowed.')
 
     return bins
