@@ -47,7 +47,7 @@ bins = [join(datapath, f) for f in listdir(datapath) if isfile(join(datapath, f)
 if len(bins) == 1:
     nbins = int(config['run']['nbins'])
     log.info(f'Splitting observation in {nbins} time bins')
-    bins = split_observation(fitsfile=bins[0], nbins=nbins)
+    bins = split_observation(fitsfile=bins[0], nbins=nbins, type=config['run']['type'])
 
 # create single folders per each fits in $DATA and copy xml files within
 for b in bins:
@@ -87,6 +87,8 @@ for b in bins:
     prm = root.find('parameter[@name="Stack"]')
     prm.set('value', str(bool2int(config['run']['stack'])))
     prm.set('depth', str(config['run']['maxdepth']))
+    prm = root.find('parameter[@name="Logging"]')
+    prm.set('level', config['loglevel'])
     jobconf.write(jobfile)
 
 # modify obs.xml per each bin in $DATA
