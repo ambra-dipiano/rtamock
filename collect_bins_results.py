@@ -12,8 +12,8 @@ import numpy as np
 import argparse
 import logging
 import xml.etree.ElementTree as ET
-from os import listdir, remove
-from os.path import join, isdir, basename, isfile
+from os import listdir
+from os.path import join, isdir, basename
 from sagsci.tools.utils import get_absolute_path
 from sagsci.tools.myxml import MyXml
 
@@ -30,14 +30,13 @@ log.setLevel(logging.DEBUG)
 # get all time bins in run
 log.info(f'Collect timebins in run {args.run}')
 datapath = join(get_absolute_path(args.dataset))
-subdirs = [join(datapath, d) for d in listdir(datapath) if isdir(join(datapath, d))]
-datafile = join(datapath, f'run{args.run}_lightcurve_{len(subdirs)}bins.txt')
+subdirs = np.sort([join(datapath, d) for d in listdir(datapath) if isdir(join(datapath, d))])
+datafile = join(datapath, f'run{args.run}_lightcurve_{len(subdirs)}bins.csv')
 
 # create and clear file
 f = open(datafile, 'w+')
-w = csv.writer(f, delimiter=' ')
-hdr = ['time', 'time_err', 'excess', 'excess_err', 'sigma', 'sigma_err', 'flux', 'flux_err', 'on_counts', 'off_counts', 'emin', 'emax']
-w.writerow(hdr)
+hdr = "time time_err excess excess_err sigma sigma_err flux flux_err on_counts off_counts alpha emin emax\n"
+f.writelines([hdr])
 
 # loop all time bins
 for idx, d in enumerate(subdirs):
@@ -62,6 +61,7 @@ for idx, d in enumerate(subdirs):
     excess_err = xml.get_job_results(source=source, parameter='Photometric', attribute='excess_err')
     off_counts = xml.get_job_results(source=source, parameter='Photometric', attribute='off_counts')
     off_err = np.sqrt(off_counts)
+    alpha = xml.get_job_results(source=source, parameter='Photometric', attribute='alpha')
     on_counts = xml.get_job_results(source=source, parameter='Photometric', attribute='on_counts')
     on_err = np.sqrt(on_counts)
     sigma = xml.get_job_results(source=source, parameter='Significance', attribute='value')
@@ -71,8 +71,9 @@ for idx, d in enumerate(subdirs):
     xml.close_xml()
 
     # write to file
-    row = [tmean, terror, excess, excess_err, sigma, sigma_err, flux, flux_err, on_counts, on_err, off_counts, off_err, emin, emax]
-    w.writerow(row)
+    row = f"{tmean} {terror} {excess} {excess_err} {sigma} {sigma_err} {flux} {flux_err} {on_counts} {off_counts} {alpha} {emin} {emax}\n"
+    print(row)
+    f.writelines([row])
 
 f.close()
 log.info(f'Results collected in: {datafile}')
