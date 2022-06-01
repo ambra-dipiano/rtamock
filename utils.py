@@ -13,6 +13,12 @@ from os import system
 from astropy.io import fits
 from sagsci.tools.fits import Fits
 
+def bool2int(val):
+    if val is True:
+        return 1
+    else:
+        return 0
+
 def get_obj_pointing(fitsfile):
     with fits.open(fitsfile) as h:
         ra = h['EVENTS'].header['RA_OBJ']
