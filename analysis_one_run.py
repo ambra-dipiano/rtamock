@@ -31,7 +31,7 @@ wrapper = config['wrapper'].upper()
 
 # get all time bins in run
 log.info(f'Collect timebins in run {runid}')
-datapath = join(get_absolute_path(dataset), runid)
+datapath = join(get_absolute_path(dataset), str(runid))
 subdirs = [join(datapath, d) for d in listdir(datapath) if isdir(join(datapath, d))]
 
 # loop all time bins
