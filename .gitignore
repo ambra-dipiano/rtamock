@@ -3,6 +3,7 @@
 *.yml
 *.xml
 *.fits
+*.png
 !data/crab/run1/template/*
 !data/crab/run2/template/*
 !data/crab/run3/template/*
