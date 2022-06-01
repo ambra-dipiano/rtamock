@@ -121,10 +121,10 @@ for b in bins:
 bins = [join(datapath, d) for d in listdir(datapath) if isdir(join(datapath, d))]
 log.info('Prepare target.xml files')
 for b in bins:
-    obsfile = join(b, 'target.xml')
-    with open(obsfile) as obs:
-        obsconf = ET.parse(obs)
+    targetfile = join(b, 'target.xml')
+    with open(targetfile) as t:
+        tconf = ET.parse(t)
     root = obsconf.getroot()
     prm = root.find('source')
     root.set('name', config['source'])
-    obsconf.write(obsfile)
+    tconf.write(targetfile)
