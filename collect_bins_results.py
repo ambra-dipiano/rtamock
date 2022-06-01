@@ -72,7 +72,6 @@ for idx, d in enumerate(subdirs):
 
     # write to file
     row = f"{tmean} {terror} {excess} {excess_err} {sigma} {sigma_err} {flux} {flux_err} {on_counts} {off_counts} {alpha} {emin} {emax}\n"
-    print(row)
     f.writelines([row])
 
 f.close()
