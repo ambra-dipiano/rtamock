@@ -7,12 +7,13 @@
 # Ambra Di Piano <ambra.dipiano@inaf.it>
 # *******************************************************************************
 
-from os import system
 import yaml
 import argparse
+import logging
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
+from os import system
 from sagsci.tools.utils import get_absolute_path, str2bool
 
 # get line command options
@@ -20,6 +21,10 @@ parser = argparse.ArgumentParser()
 parser.add_argument("-f", "--configfile", default="myconfig.yml", help="configuration YAML file")
 parser.add_argument("-cp", "--copyfiles", default="false", help="copy plot files in repository dir")
 args = parser.parse_args()
+
+# set logging level
+log = logging.getLogger(__name__)
+log.setLevel(logging.DEBUG)
 
 # get YAML configuration
 configuration = open(args.configfile)
@@ -76,8 +81,10 @@ for w in which:
     plt.tight_layout()
     outname = get_absolute_path(config['plot']['data']).replace('.csv', f'_{w}.png') 
     plt.savefig(outname)
+    log.info(f'Saved {w} lightcurve: {outname}')
 
     if str2bool(args.copyfiles):
+        log.info('Copy figure to workspace.')
         system(f'cp {outname} .')
 
 
