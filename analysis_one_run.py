@@ -7,6 +7,7 @@
 # Ambra Di Piano <ambra.dipiano@inaf.it>
 # *******************************************************************************
 
+import yaml
 import argparse
 import logging
 from os import listdir, system
@@ -14,18 +15,23 @@ from os.path import join, isdir, isfile, basename
 from sagsci.tools.utils import get_absolute_path
 
 parser = argparse.ArgumentParser()
-parser.add_argument("-d", "--dataset", default="$DATA", help="directory to dataset")
-parser.add_argument("-w", "--wrapper", type=str, default='rtaph', help="runid")
-parser.add_argument("-r", "--run", type=str, required=True, help="runid")
+parser.add_argument("-f", "--configfile", default="myconfig.yml", help="configuration file")
 args = parser.parse_args()
 
 # set logging level
 log = logging.getLogger(__name__)
 log.setLevel(logging.DEBUG)
 
+# get YAML configuration
+configuration = open(args.configfile)
+config = yaml.load(configuration, Loader=yaml.FullLoader)
+dataset = config['dirlist']['data']
+runid = config['run']['runid']
+wrapper = config['wrapper'].upper()
+
 # get all time bins in run
-log.info(f'Collect timebins in run {args.run}')
-datapath = join(get_absolute_path(args.dataset), args.run)
+log.info(f'Collect timebins in run {runid}')
+datapath = join(get_absolute_path(dataset), runid)
 subdirs = [join(datapath, d) for d in listdir(datapath) if isdir(join(datapath, d))]
 
 # loop all time bins
@@ -43,9 +49,9 @@ for d in subdirs:
     
     # run time bin analysis
     log.info(f'Execute analysis of: {basename(d)}')
-    system(f'python ${args.wrapper.upper()}/execute.py -obs $DATA/{args.run}/{basename(d)}/obs.xml -job $DATA/{args.run}/{basename(d)}/job.xml -target $DATA/{args.run}/{basename(d)}/target.xml -evt $DATA/{args.run}/{basename(d)}/{basename(d)}.fits')
+    system(f'python ${wrapper.upper()}/execute.py -obs $DATA/{runid}/{basename(d)}/obs.xml -job $DATA/{runid}/{basename(d)}/job.xml -target $DATA/{runid}/{basename(d)}/target.xml -evt $DATA/{runid}/{basename(d)}/{basename(d)}.fits')
 
 
-log.info(f'Analysis of run {args.run} completed with {args.wrapper.upper()} science tool.')
+log.info(f'Analysis of run {runid} completed with {wrapper.upper()} science tool.')
 
 
