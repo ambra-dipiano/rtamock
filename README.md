@@ -19,5 +19,5 @@ python collect_bins_results.py -d $DATA/<ARCHIVE_FOLDER>/<RUNID>/<BINS_PARENT_FO
 # Plot lightcurves of list of runs
 
 ```bash
-python plot_lightcurves.py -f <myconfig.yml>
+python plot_lightcurves.py -f <myconfig.yml> -cp <true|false>
 ```
