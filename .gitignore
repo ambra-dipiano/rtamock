@@ -1,10 +1,12 @@
-# mine
-*.sh
+# files
 *.yml
 *.xml
 *.fits
 *.png
 *.csv
+loadenv.sh
+
+# exceptions
 !data/crab/run1/template/*
 !data/crab/run2/template/*
 !data/crab/run3/template/*
