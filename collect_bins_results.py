@@ -35,7 +35,7 @@ log.info(f'Collect timebins in run {config["run"]["runid"]}')
 datapath = join(get_absolute_path(config["dirlist"]["archive"]).replace('XXX', str(config['run']['runid'])), f"analysis_{config['run']['nbins']}_bins_{config['run']['type']}")
 subdirs = np.sort([join(datapath, d) for d in listdir(datapath) if isdir(join(datapath, d))])
 
-datafile = join(datapath, f'run{config["run"]["runid"]}_{config["run"]["type"]}_{len(subdirs)}bins.csv')
+datafile = join(datapath, f'run{config["run"]["runid"]}_{config["run"]["type"]}_{config["run"]["nbins"]}bins.csv')
 
 # create and clear file
 f = open(datafile, 'w+')
