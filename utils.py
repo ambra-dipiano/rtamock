@@ -7,7 +7,7 @@
 # Ambra Di Piano <ambra.dipiano@inaf.it>
 # *******************************************************************************
 
-
+from re import compile, escape, DOTALL
 import numpy as np
 from os import system
 from astropy.io import fits
@@ -52,3 +52,7 @@ def split_observation(fitsfile, nbins, type='lightcurve'):
             raise ValueError(f'Type "{type.lower()}" not allowed.')
 
     return bins
+
+def multiple_replace(string, rep_dict):
+    pattern = compile("|".join([escape(k) for k in sorted(rep_dict,key=len,reverse=True)]), flags=DOTALL)
+    return pattern.sub(lambda x: rep_dict[x.group(0)], string)
