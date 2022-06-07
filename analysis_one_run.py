@@ -10,7 +10,7 @@
 import yaml
 import argparse
 import logging
-from os import listdir, system
+from os import listdir, remove, system
 from os.path import join, isdir, isfile, basename
 from sagsci.tools.utils import get_absolute_path
 
@@ -54,10 +54,15 @@ for d in subdirs:
     system(f'python ${wrapper.upper()}/execute.py -obs $DATA/{runid}/{basename(d)}/obs.xml -job $DATA/{runid}/{basename(d)}/job.xml -target $DATA/{runid}/{basename(d)}/target.xml -evt $DATA/{runid}/{basename(d)}/{basename(d)}.fits')
 
     # move bin in new_dir
-    system(f'mv {d} {join(new_dir)}')
+    system(f'mv {d} {new_dir}')
 
 # move new_dir in archive
-system(f'mv {new_dir} {config["dirlist"]["archive"].replace("XXX", str(config["run"]["runid"]))}')
+archive_dir = config["dirlist"]["archive"].replace("XXX", str(config["run"]["runid"]))
+if isdir(join(archive_dir, new_dir)):
+    system(f'rm -r {join(archive_dir, new_dir)}')
+system(f'mv {new_dir} {archive_dir}')
+
+# close
 log.info(f'Analysis of run {runid} completed with {wrapper.upper()} science tool.')
 
 

@@ -68,7 +68,7 @@ def plot_counts(data, xerr=True):
         plt.errorbar(x=data['time'], y=data['on_counts'], yerr=np.sqrt(data['on_counts']), fmt='g^', barsabove=True, label='Non')
     plt.ylabel('counts', fontsize=fs)
 
-datafile = get_absolute_path(config['plot']['data']).replace('XXX', str(config['run']['runid'])).replace('YYY', config['run']['type'])
+datafile = get_absolute_path(config['plot']['data']).replace('XXX', str(config['run']['runid'])).replace('YYY', config['run']['type']).replace('ZZZ', str(config['run']['nbins']))
 data = pd.read_csv(datafile, sep=' ', header=0)
 data['time'] = data['time'] - data['time'].min()
 
@@ -100,7 +100,7 @@ for w in which:
     plt.legend()
 
     plt.tight_layout()
-    outname = get_absolute_path(config['plot']['data']).replace('XXX', str(config['run']['runid'])).replace('YYY', config['run']['type']).replace('.csv', f'_{w}.png') 
+    outname = get_absolute_path(config['plot']['data']).replace('XXX', str(config['run']['runid'])).replace('YYY', config['run']['type']).replace('ZZZ', str(config['run']['nbins'])).replace('.csv', f'_{w}.png') 
     plt.savefig(outname)
     log.info(f'Saved {w} lightcurve: {outname}')
 
