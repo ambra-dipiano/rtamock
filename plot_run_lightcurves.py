@@ -52,7 +52,7 @@ def plot_counts(data):
     plt.errorbar(x=data['time'], y=data['on_counts'], xerr=data['time_err'], yerr=np.sqrt(data['on_counts']), fmt='g^', barsabove=True, label='Non')
     plt.ylabel('counts', fontsize=fs)
 
-datafile = get_absolute_path(config['plot']['data'])
+datafile = get_absolute_path(config['plot']['data']).replace('XXX', config['run']['runid']).replace('YYY', config['run']['type'])
 data = pd.read_csv(datafile, sep=' ', header=0)
 data['time'] = data['time'] - data['time'].min()
 

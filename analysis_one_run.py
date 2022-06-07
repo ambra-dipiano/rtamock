@@ -35,6 +35,8 @@ datapath = join(get_absolute_path(dataset), str(runid))
 subdirs = [join(datapath, d) for d in listdir(datapath) if isdir(join(datapath, d))]
 
 # loop all time bins
+new_dir = join(datapath, f"analysis_{config['run']['nbins']}_bins_{config['run']['type']}")
+system(f'mkdir {new_dir}')
 for d in subdirs:
     # check all files are there
     system(f'cd {datapath}')
@@ -51,7 +53,11 @@ for d in subdirs:
     log.info(f'Execute analysis of: {basename(d)}')
     system(f'python ${wrapper.upper()}/execute.py -obs $DATA/{runid}/{basename(d)}/obs.xml -job $DATA/{runid}/{basename(d)}/job.xml -target $DATA/{runid}/{basename(d)}/target.xml -evt $DATA/{runid}/{basename(d)}/{basename(d)}.fits')
 
+    # move bin in new_dir
+    system(f'mv {d} {join(new_dir)}')
 
+# move new_dir in archive
+system(f'mv {new_dir} {config["dirlist"]["archive"].replace("XXX", str(config["run"]["runid"]))}')
 log.info(f'Analysis of run {runid} completed with {wrapper.upper()} science tool.')
 
 

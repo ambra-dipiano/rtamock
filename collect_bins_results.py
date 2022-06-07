@@ -7,7 +7,7 @@
 # Ambra Di Piano <ambra.dipiano@inaf.it>
 # *******************************************************************************
 
-import csv
+import yaml
 import numpy as np
 import argparse
 import logging
@@ -19,19 +19,23 @@ from sagsci.tools.myxml import MyXml
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument("-d", "--dataset", default="$DATA/analysis_archive", help="directory to dataset")
-parser.add_argument("-r", "--run", type=str, required=True, help="runid")
+parser.add_argument("-f", "--configfile", default="myconfig.yml", help="configuration file")
 args = parser.parse_args()
 
 # set logging level
 log = logging.getLogger(__name__)
 log.setLevel(logging.DEBUG)
 
+# get YAML configuration
+configuration = open(args.configfile)
+config = yaml.load(configuration, Loader=yaml.FullLoader)
+
 # get all time bins in run
-log.info(f'Collect timebins in run {args.run}')
+log.info(f'Collect timebins in run {config["run"]["runid"]}')
 datapath = join(get_absolute_path(args.dataset))
 subdirs = np.sort([join(datapath, d) for d in listdir(datapath) if isdir(join(datapath, d))])
-datafile = join(datapath, f'run{args.run}_lightcurve_{len(subdirs)}bins.csv')
+
+datafile = join(datapath, f'run{config["run"]["runid"]}_{config["run"]["type"]}_{len(subdirs)}bins.csv')
 
 # create and clear file
 f = open(datafile, 'w+')
