@@ -66,7 +66,6 @@ log.info('Prepare job.xml files')
 for b in bins:
     fitsfile = join(b, basename(b)+'.fits')
     tstart, tstop = get_obs_GTI(fitsfile=fitsfile)
-    log.debug(f'time = [{tstart, tstop}]')
     pointing = get_obs_pointing(filename=fitsfile)
     jobfile = join(b, 'job.xml')
     with open(jobfile) as job:
@@ -94,7 +93,6 @@ for b in bins:
     jobconf.write(jobfile)
 
 # modify obs.xml per each bin in $DATA
-bins = [join(datapath, d) for d in listdir(datapath) if isdir(join(datapath, d))]
 log.info('Prepare obs.xml files')
 for b in bins:
     obsfile = join(b, 'obs.xml')
@@ -124,7 +122,6 @@ for b in bins:
     obsconf.write(obsfile)
 
 # modify target.xml per each bin in $DATA
-bins = [join(datapath, d) for d in listdir(datapath) if isdir(join(datapath, d))]
 log.info('Prepare target.xml files')
 for b in bins:
     targetfile = join(b, 'target.xml')

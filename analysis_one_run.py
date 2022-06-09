@@ -10,7 +10,8 @@
 import yaml
 import argparse
 import logging
-from os import listdir, remove, system
+import numpy as np
+from os import listdir, system
 from os.path import join, isdir, isfile, basename
 from sagsci.tools.utils import get_absolute_path
 
@@ -32,7 +33,7 @@ wrapper = config['wrapper'].upper()
 # get all time bins in run
 log.info(f'Collect timebins in run {runid}')
 datapath = join(get_absolute_path(dataset), str(runid))
-subdirs = [join(datapath, d) for d in listdir(datapath) if isdir(join(datapath, d))]
+subdirs = np.sort([join(datapath, d) for d in listdir(datapath) if isdir(join(datapath, d))])
 
 # loop all time bins
 new_dir = join(datapath, f"analysis_{config['run']['nbins']}_bins_{config['run']['type']}")
@@ -51,7 +52,7 @@ for d in subdirs:
     
     # run time bin analysis
     log.info(f'Execute analysis of: {basename(d)}')
-    system(f'python ${wrapper.upper()}/execute.py -obs $DATA/{runid}/{basename(d)}/obs.xml -job $DATA/{runid}/{basename(d)}/job.xml -target $DATA/{runid}/{basename(d)}/target.xml -evt $DATA/{runid}/{basename(d)}/{basename(d)}.fits')
+    system(f'python ${wrapper.upper()}/execute.py -obs {d}/obs.xml -job {d}/job.xml -target {d}/target.xml -evt {d}/{basename(d)}.fits')
 
     # move bin in new_dir
     system(f'mv {d} {new_dir}')
@@ -64,5 +65,6 @@ system(f'mv {new_dir} {archive_dir}')
 
 # close
 log.info(f'Analysis of run {runid} completed with {wrapper.upper()} science tool.')
+
 
 
