@@ -10,11 +10,11 @@ loadenv.sh
 analysis_archive
 
 # exceptions
-!data/crab/run1/template/*
-!data/crab/run2/template/*
-!data/crab/run3/template/*
-!data/crab/run4/template/*
-!data/grb/run1/template/*
+!data/template/*
+!data/template/*
+!data/template/*
+!data/template/*
+!data/template/*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -145,3 +145,4 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
