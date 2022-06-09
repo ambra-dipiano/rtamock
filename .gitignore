@@ -4,6 +4,7 @@
 *.fits
 *.png
 *.csv
+*.reg
 loadenv.sh
 
 # folders
