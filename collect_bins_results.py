@@ -39,7 +39,7 @@ datafile = join(datapath, f'run{config["run"]["runid"]}_{config["run"]["type"]}_
 
 # create and clear file
 f = open(datafile, 'w+')
-hdr = "time time_err excess excess_err sigma sigma_err flux flux_err on_counts off_counts alpha emin emax\n"
+hdr = "tmin tmax time time_err excess excess_err sigma sigma_err flux flux_err on_counts off_counts alpha emin emax\n"
 f.writelines([hdr])
 
 # loop all time bins
@@ -51,8 +51,11 @@ for idx, d in enumerate(subdirs):
     jobconf = ET.parse(xml)
     tmin = float(jobconf.find('parameter[@name="TimeIntervals"]').attrib['tmin'])
     tmax = float(jobconf.find('parameter[@name="TimeIntervals"]').attrib['tmax'])
-    tmean = (tmin + tmax)/2
+    #tmean = (tmin + tmax)/2
+    tmean = tmax
     terror = (tmax - tmin)/2
+    log.debug(f'time = [{tmin}, {tmax}], exposure = {tmax-tmin}')
+    log.debug(f'bin center = [{tmean}]')
     emin = float(jobconf.find('parameter[@name="Energy"]').attrib['emin'])
     emax = float(jobconf.find('parameter[@name="Energy"]').attrib['emax'])
     xml.close()
@@ -75,7 +78,7 @@ for idx, d in enumerate(subdirs):
     xml.close_xml()
 
     # write to file
-    row = f"{tmean} {terror} {excess} {excess_err} {sigma} {sigma_err} {flux} {flux_err} {on_counts} {off_counts} {alpha} {emin} {emax}\n"
+    row = f"{tmin} {tmax} {tmean} {terror} {excess} {excess_err} {sigma} {sigma_err} {flux} {flux_err} {on_counts} {off_counts} {alpha} {emin} {emax}\n"
     f.writelines([row])
 
 f.close()

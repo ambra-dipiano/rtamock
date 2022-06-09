@@ -70,7 +70,11 @@ def plot_counts(data, xerr=True):
 
 datafile = get_absolute_path(config['plot']['data']).replace('XXX', str(config['run']['runid'])).replace('YYY', config['run']['type']).replace('ZZZ', str(config['run']['nbins']))
 data = pd.read_csv(datafile, sep=' ', header=0)
+log.debug(f'bins = [{data["time"].min()}, {data["time"].max()}]')
 data['time'] = data['time'] - data['time'].min()
+log.debug(f'bins = [{data["time"].min()}, {data["time"].max()}]')
+log.debug(f'time = [{data["tmin"].min()}, {data["tmax"].max()}]')
+log.debug(f'Len table = {len(data)}')
 
 which = config['plot']['which']
 fs = 16

@@ -7,11 +7,17 @@
 # Ambra Di Piano <ambra.dipiano@inaf.it>
 # *******************************************************************************
 
-from re import compile, escape, DOTALL
+import logging
 import numpy as np
+from re import compile, escape, DOTALL
 from os import system
 from astropy.io import fits
 from sagsci.tools.fits import Fits
+
+# set logging level 
+log = logging.getLogger(__name__)
+log.setLevel(logging.DEBUG)
+
 
 def bool2int(val):
     if val is True:
@@ -35,6 +41,7 @@ def split_observation(fitsfile, nbins, type='lightcurve'):
     edges = np.linspace(GTI[0], GTI[1], num=nbins+1)
     bins = []
     for i in range(len(edges)-1):
+        log.debug(f'GTI = [{edges[i]}, {edges[i+1]}]')
         selection = fitsfile.replace(".fits", f"_{edges[i]}_{edges[i+1]}.fits")
         system(f'cp {fitsfile} {selection}')
         bins.append(selection)
