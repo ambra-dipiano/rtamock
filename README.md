@@ -1,3 +1,13 @@
+# Export $VARS and activate environment
+
+- Activate the environment where the SAG-SCI and the science tool in used by the wrapper are installed
+- Export the environment variable corresponding to the wrapper, i.e. RTAPH or GAMMAPY
+
+```bash
+export RTAPH=path/to/sagsci/wrappers/rtaph
+export GAMMAPY=path/to/sagsci/wrappers/gammapy
+```
+
 # Prepare dataset
 
 - From single observation create time bins
