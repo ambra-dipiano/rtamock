@@ -8,14 +8,14 @@
 loadenv.sh
 
 # folders
-analysis_archive
+rtamock/analysis_archive
 
 # exceptions
-!data/template/*
-!data/template/*
-!data/template/*
-!data/template/*
-!data/template/*
+!rtamock/data/template/*
+!rtamock/data/template/*
+!rtamock/data/template/*
+!rtamock/data/template/*
+!rtamock/data/template/*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
