@@ -60,8 +60,6 @@ for d in subdirs:
 
 # move new_dir in archive
 archive_dir = config["dirlist"]["archive"].replace("XXX", str(config["run"]["runid"]))
-#if isdir(join(archive_dir, new_dir)):
-#    system(f'rm -r {join(archive_dir, new_dir)}')
 system(f'mv {new_dir} {archive_dir}')
 
 # close

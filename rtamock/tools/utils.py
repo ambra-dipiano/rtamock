@@ -15,6 +15,21 @@ from astropy.io import fits
 from sagsci.tools.fits import Fits
 from os.path import dirname, isdir
 
+def get_level_code(level):
+    if level.lower() == 'debug':
+        level = 10
+    elif level.lower() == 'info':
+        level = 20
+    elif level.lower() == 'warning':
+        level = 30
+    elif level.lower() == 'error':
+        level = 40
+    elif level.lower() == 'critical':
+        level = 50
+    else:
+        level = 0
+    return level
+
 def set_logger(filename, level):
     if not isdir(dirname(filename)):
         makedirs(dirname(filename))
@@ -26,6 +41,8 @@ def set_logger(filename, level):
     consoleHandler.setFormatter(formatter)
     log.addHandler(fileHandler)
     log.addHandler(consoleHandler)
+    if type(level) == str:
+        level = get_level_code(level)
     log.setLevel(level)
     return log
 
