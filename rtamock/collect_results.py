@@ -9,11 +9,10 @@
 
 import csv
 import argparse
-from turtle import bk
 import numpy as np
 import xml.etree.ElementTree as ET
 from os import listdir, makedirs
-from os.path import join, isdir, expandvars, isfile
+from os.path import join, isdir, isfile
 from sagsci.tools.utils import str2bool
 from sagsci.tools.myxml import MyXml
 
@@ -28,7 +27,6 @@ args = parser.parse_args()
 
 if type(args.directories) is not list:
     args.directories = [args.directories]
-print(f'Directories: {args.directories}')
 
 if str2bool(args.lightcurve):
     if not isdir(args.output):

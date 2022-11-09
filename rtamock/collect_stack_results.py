@@ -38,7 +38,6 @@ f.writelines([hdr])
 
 # loop all time bins
 for idx, d in enumerate(subdirs):
-
     # get from job configuration
     job = join(datapath, d, 'job.xml')
     xml = open(job)
@@ -59,12 +58,12 @@ for idx, d in enumerate(subdirs):
     on_counts = xml.get_stacked_results(source=source, parameter='Photometric', attribute='on_counts')
     on_err = np.sqrt(on_counts)
     sigma = xml.get_stacked_results(source=source, parameter='Significance', attribute='value')
-    print(sigma)
+    log.debug(f"sigma: {sigma}")
     sigma_err = xml.get_stacked_results(source=source, parameter='Significance', attribute='error')
     flux = xml.get_stacked_results(source=source, parameter='IntegratedFlux', attribute='value')
     flux_err = xml.get_stacked_results(source=source, parameter='IntegratedFlux', attribute='error')
     tmean = xml.get_stacked_attribute(source=source, attribute='livetime')
-    print(tmean)
+    log.debug(f"tmean:{tmean}")
     terror = tmean/2
     xml.close_xml()
 
