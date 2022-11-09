@@ -1,0 +1,33 @@
+source: Crab
+
+run: 
+  runid: W1
+  nbins: 100
+  emin: 0.03
+  emax: 3
+  roi: 2
+  prod: prod5
+  irf: Prod5-North-20deg-AverageAz-4LSTs.1800s-v0.1
+  stack: no
+  maxdepth: 1
+  type: cumulative
+
+wobble:
+  - 4191
+
+dirlist:
+  data: $PWD/data
+  archive: $PWD/analysis_archive/XXX
+
+loglevel: warning
+
+wrapper: rtaph
+
+plot:
+  data: $PWD/analysis_archive/XXX/analysis_ZZZ_bins_YYY/runXXX_YYY_ZZZbins.csv
+  which:
+    - background
+    - counts
+    - excess
+    - significance
+    - flux
