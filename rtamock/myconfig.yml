@@ -16,15 +16,15 @@ wobble:
   - 4191
 
 dirlist:
-  data: $PWD/data
-  archive: $PWD/analysis_archive/XXX
+  data: ./data
+  archive: ./analysis_archive/XXX
 
-loglevel: warning
+loglevel: info
 
 wrapper: rtaph
 
 plot:
-  data: $PWD/analysis_archive/XXX/analysis_ZZZ_bins_YYY/runXXX_YYY_ZZZbins.csv
+  data: ./analysis_archive/XXX/analysis_ZZZ_bins_YYY/runXXX_YYY_ZZZbins.csv
   which:
     - background
     - counts
