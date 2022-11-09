@@ -15,7 +15,7 @@ import xml.etree.ElementTree as ET
 from os import listdir, system
 from os.path import join, isdir, expandvars, isfile, basename
 from sagsci.tools.utils import get_obs_pointing
-from utils import get_obs_GTI, split_observation, bool2int
+from tools.utils import get_obs_GTI, split_observation, bool2int
 
 # get line command options
 parser = argparse.ArgumentParser()

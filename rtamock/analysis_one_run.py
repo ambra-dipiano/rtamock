@@ -9,26 +9,27 @@
 
 import yaml
 import argparse
-import logging
 import numpy as np
 from os import listdir, system
 from os.path import join, isdir, isfile, basename
 from sagsci.tools.utils import get_absolute_path
+from rtamock.tools.utils import set_logger
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-f", "--configfile", default="myconfig.yml", help="configuration file")
 args = parser.parse_args()
 
-# set logging level
-log = logging.getLogger(__name__)
-log.setLevel(logging.DEBUG)
-
 # get YAML configuration
-configuration = open(args.configfile)
-config = yaml.load(configuration, Loader=yaml.FullLoader)
+with open(args.configfile) as configuration:
+    config = yaml.load(configuration, Loader=yaml.FullLoader)
 dataset = config['dirlist']['data']
 runid = config['run']['runid']
 wrapper = config['wrapper'].upper()
+
+# logging
+logname = join(config["dirlist"]["archive"].replace("XXX", str(config["run"]["runid"])), basename(__file__).replace('.py','.log'))
+log = set_logger(filename=logname, level=config['loglevel'])
+log.info('Logging: ' + logname)
 
 # get all time bins in run
 log.info(f'Collect timebins in run {runid}')
