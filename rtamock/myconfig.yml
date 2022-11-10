@@ -19,7 +19,9 @@ dirlist:
   data: ./data
   archive: ./analysis_archive/XXX
 
-loglevel: info
+logging: 
+  level: debug
+  folder: ./logs
 
 wrapper: rtaph
 
