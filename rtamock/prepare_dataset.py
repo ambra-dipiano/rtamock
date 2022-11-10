@@ -9,13 +9,12 @@
 
 import yaml
 import argparse
-import logging
 import numpy as np
 import xml.etree.ElementTree as ET
 from os import listdir, system
 from os.path import join, isdir, expandvars, isfile, basename
 from sagsci.tools.utils import get_obs_pointing
-from tools.utils import get_obs_GTI, split_observation, bool2int
+from tools.utils import get_obs_GTI, split_observation, bool2int, set_logger
 
 # get line command options
 parser = argparse.ArgumentParser()
@@ -27,9 +26,10 @@ configuration = open(args.configfile)
 config = yaml.load(configuration, Loader=yaml.FullLoader)
 runid = config["run"]["runid"]
 
-# set logging level 
-log = logging.getLogger(__name__)
-log.setLevel(logging.DEBUG)
+# logging
+logname = join(config["dirlist"]["data"], basename(__file__).replace('.py','.log'))
+log = set_logger(filename=logname, level=config['loglevel'])
+log.info('Logging: ' + logname)
 
 # set datapath
 datapath = join(expandvars(config['dirlist']['data']), str(runid))
