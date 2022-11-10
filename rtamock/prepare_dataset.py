@@ -13,7 +13,7 @@ import numpy as np
 import xml.etree.ElementTree as ET
 from os import listdir, system
 from os.path import join, isdir, expandvars, isfile, basename
-from sagsci.tools.utils import get_obs_pointing
+from sagsci.tools.utils import get_obs_pointing, get_absolute_path
 from tools.utils import get_obs_GTI, split_observation, bool2int, set_logger
 
 # get line command options
@@ -27,12 +27,13 @@ config = yaml.load(configuration, Loader=yaml.FullLoader)
 runid = config["run"]["runid"]
 
 # logging
-logname = join(config["dirlist"]["data"], basename(__file__).replace('.py','.log'))
+logname = join(get_absolute_path(config["dirlist"]["data"]), basename(__file__).replace('.py','.log'))
 log = set_logger(filename=logname, level=config['loglevel'])
 log.info('Logging: ' + logname)
 
 # set datapath
-datapath = join(expandvars(config['dirlist']['data']), str(runid))
+datapath = join(get_absolute_path(config['dirlist']['data']), str(runid))
+log.debug(f"Data: {datapath}")
 
 # remove all subfolders in $DATA directory
 log.info(f'Remove all subdirs in run directory')
