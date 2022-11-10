@@ -9,12 +9,13 @@
 
 import yaml
 import argparse
-import logging
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 from os import system
+from os.path import join, basename
 from sagsci.tools.utils import get_absolute_path, str2bool
+from rtamock.tools.utils import set_logger
 
 # get line command options
 parser = argparse.ArgumentParser()
@@ -22,13 +23,14 @@ parser.add_argument("-f", "--configfile", default="myconfig.yml", help="configur
 parser.add_argument("-cp", "--copyfiles", default="false", help="copy plot files in repository dir")
 args = parser.parse_args()
 
-# set logging level
-log = logging.getLogger(__name__)
-log.setLevel(logging.DEBUG)
-
 # get YAML configuration
 configuration = open(args.configfile)
 config = yaml.load(configuration, Loader=yaml.FullLoader)
+
+# logging
+logname = join(get_absolute_path(config["logging"]["folder"]), basename(__file__).replace('.py','.log'))
+log = set_logger(filename=logname, level=config["logging"]['level'])
+log.info('Logging: ' + logname)
 
 def plot_significance(data, xerr=True):
     if xerr:

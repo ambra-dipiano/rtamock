@@ -10,25 +10,26 @@
 import yaml
 import numpy as np
 import argparse
-import logging
 import xml.etree.ElementTree as ET
 from os import listdir
 from os.path import join, isdir, basename
 from sagsci.tools.utils import get_absolute_path
 from sagsci.tools.myxml import MyXml
+from rtamock.tools.utils import set_logger
 
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-f", "--configfile", default="myconfig.yml", help="configuration file")
 args = parser.parse_args()
 
-# set logging level
-log = logging.getLogger(__name__)
-log.setLevel(logging.DEBUG)
-
 # get YAML configuration
 configuration = open(args.configfile)
 config = yaml.load(configuration, Loader=yaml.FullLoader)
+
+# logging
+logname = join(get_absolute_path(config["logging"]["folder"]), basename(__file__).replace('.py','.log'))
+log = set_logger(filename=logname, level=config["logging"]['level'])
+log.info('Logging: ' + logname)
 
 # get all time bins in run
 log.info(f'Collect timebins in run {config["run"]["runid"]}')
