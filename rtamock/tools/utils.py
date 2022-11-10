@@ -34,7 +34,7 @@ def set_logger(filename, level):
     if not isdir(dirname(filename)):
         makedirs(dirname(filename))
     log = logging.getLogger()
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    formatter = logging.Formatter('%(asctime)s|%(filename)s|l%(lineno)d|%(levelname)s| %(message)s')
     fileHandler = logging.FileHandler(filename)
     fileHandler.setFormatter(formatter)
     consoleHandler = logging.StreamHandler()
