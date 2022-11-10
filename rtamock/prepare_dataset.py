@@ -12,7 +12,7 @@ import argparse
 import numpy as np
 import xml.etree.ElementTree as ET
 from os import listdir, system
-from os.path import join, isdir, expandvars, isfile, basename
+from os.path import join, isdir, isfile, basename
 from sagsci.tools.utils import get_obs_pointing, get_absolute_path
 from tools.utils import get_obs_GTI, split_observation, bool2int, set_logger
 
@@ -27,8 +27,8 @@ config = yaml.load(configuration, Loader=yaml.FullLoader)
 runid = config["run"]["runid"]
 
 # logging
-logname = join(get_absolute_path(config["dirlist"]["data"]), basename(__file__).replace('.py','.log'))
-log = set_logger(filename=logname, level=config['loglevel'])
+logname = join(get_absolute_path(config["logging"]["folder"]), basename(__file__).replace('.py','.log'))
+log = set_logger(filename=logname, level=config["logging"]['level'])
 log.info('Logging: ' + logname)
 
 # set datapath
@@ -76,7 +76,7 @@ for b in bins:
     prm.set('tmin', str(tstart))
     prm.set('tmax', str(tstop))
     prm = root.find('parameter[@name="DirectoryList"]')
-    prm.set('job', datapath)  
+    prm.set('job', b)  
     respath = join(b, 'results') 
     prm.set('results', respath)   
     prm.set('jobprefix', f"{basename(b)}")   
@@ -90,7 +90,7 @@ for b in bins:
     prm.set('value', str(bool2int(config['run']['stack'])))
     prm.set('depth', str(config['run']['maxdepth']))
     prm = root.find('parameter[@name="Logging"]')
-    prm.set('level', config['loglevel'])
+    prm.set('level', config['logging']['level'])
     jobconf.write(jobfile)
 
 # modify obs.xml per each bin in $DATA

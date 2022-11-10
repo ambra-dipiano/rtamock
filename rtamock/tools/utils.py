@@ -10,10 +10,10 @@
 import logging
 import numpy as np
 from re import compile, escape, DOTALL
-from os import system, makedirs
+from os import system, makedirs, remove
 from astropy.io import fits
 from sagsci.tools.fits import Fits
-from os.path import dirname, isdir
+from os.path import dirname, isdir, isfile
 
 def get_level_code(level):
     if level.lower() == 'debug':
@@ -31,6 +31,8 @@ def get_level_code(level):
     return level
 
 def set_logger(filename, level):
+    if isfile(filename):
+        remove(filename)
     if not isdir(dirname(filename)):
         makedirs(dirname(filename))
     log = logging.getLogger()
