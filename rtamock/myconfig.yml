@@ -10,7 +10,7 @@ run:
   irf: Prod5-North-20deg-AverageAz-4LSTs.1800s-v0.1
   stack: no
   maxdepth: 1
-  type: cumulative
+  type: lightcurve
 
 wobble:
   - 4191
